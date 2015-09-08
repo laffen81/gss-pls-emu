@@ -174,6 +174,10 @@ void stopProgram() {
 	
 	visibleTimer->Stop();
 	hiddenTimer->Stop();
+
+	// Free alloc mem.
+	delete(visibleTimer);
+	delete(hiddenTimer);
 	
 	hasStopped = true;
 	initial = true;
