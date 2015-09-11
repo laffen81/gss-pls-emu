@@ -13,11 +13,11 @@ Timer *visibleTimer;
 
 // # IO
 
-#define RELAY 7
+#define RELAY 6
 
 Button stopButton = Button(2, PULLUP);
 Button startButton = Button(4, PULLUP);
-Button switchButton = Button(8, PULLUP);
+Button switchButton = Button(7, PULLUP);
 
 
 // # Global program variables...
@@ -41,100 +41,72 @@ void setup()
 	Serial.begin(9600);
 	
 	runTimes = 0;
-	lcd.begin(16, 2);
+	
 	// Init LCD
+	lcd.begin(16, 2);
 	lcd.setCursor(0, 0);
+	
 	// Print a message to the LCD.
-	lcd.print("VELG PROGRAM : ");
+	lcd.print(F("VELG PROGRAM : "));
 	lcd.setCursor(0, 1);
-	lcd.print("STANDARD");
+	lcd.print(F("STANDARD"));
 
-}
+	pinMode(RELAY, OUTPUT);
+
+}  
+
 
 void loop()
 {
 
+	// Program start
 	if (startButton.isPressed() && startProgram) {
 		
-		Serial.println("Start detected.");
-
-
-		switch (currentProgram) {
-		case 0:    // STANDARD
-			runProgram(0, 150000, 1);
-			break;
-		case 1:    // VM FIN / GROV
-			runProgram(7000, 300000, 1);
-			break;
-		case 2:    // VMFIN / GROV DUELL
-			runProgram(7000, 3000, 5);
-			break;
-		case 3:    // 7-20
-			runProgram(7000, 20000, 1);
-			break;
-		case 4:    // 7-10
-			runProgram(7000, 10000, 1);
-			break;
-		case 5:    // 7-8
-			runProgram(7000, 8000, 1);
-			break;
-		case 6:    // 7-6
-			runProgram(7000, 6000, 1);
-			break;
-		case 7:    // 7-4
-			runProgram(7000, 4000, 3);
-			break;
-		case 8:    // CUSTOM
-			runProgram(7000, 10000, 1);
-			break;
-		}
-
+		Serial.println(F("Start detected."));
+		switchProgram(true);
 		delay(300);
 	}
 
 
-
+	// Program picker
 	if (switchButton.isPressed() && startProgram) {
 		
-		switchProgram();
+		switchProgram(false);
 		delay(300);
 	}
 
 
 }
 
+
+
 void runProgram(int hidden, int visible, int repeat) {
-
-
 
 	if (startProgram) {
 		startProgram = false;
 
-		Serial.println("We are in program start...");
-		Serial.println(finished);
-
 		while (!finished) {
 
 			if (notifyUser) {
+				
 				// Notify user of progress.
-				Serial.print("Run : ");
+				Serial.print(F("Run : "));
 				Serial.print(runTimes + 1);
-				Serial.print(" of ");
+				Serial.print(F(" of "));
 				Serial.println(repeat);
 				notifyUser = false;
 
-
-
 				lcd.setCursor(0, 0);
-				lcd.print("KJORER PROGRAM : ");
+				lcd.print(F("KJORER PROGRAM : "));
 				lcd.setCursor(0, 1);
-				lcd.print("OMGANG : ");
+				lcd.print(F("OMGANG : "));
 				lcd.print(runTimes + 1);
-				lcd.print("/");
+				lcd.print(F("/"));
 				lcd.print(repeat);
 			}
 
 			if (initial) {
+				
 				hideTarget();
 
 				hiddenTimer = new Timer(hidden, &showTarget);
@@ -157,7 +129,7 @@ void runProgram(int hidden, int visible, int repeat) {
 
 
 			if (runTimes >= repeat) {
-				Serial.println("Program finished");
+				Serial.println(F("Program finished"));
 
 				stopProgram();
 			}
@@ -176,8 +148,8 @@ void stopProgram() {
 	hiddenTimer->Stop();
 
 	// Free alloc mem.
-	delete(visibleTimer);
-	delete(hiddenTimer);
+	delete(&visibleTimer);
+	delete(&hiddenTimer);
 	
 	hasStopped = true;
 	initial = true;
@@ -186,65 +158,77 @@ void stopProgram() {
 	notifyUser = true;
 	runTimes = 0;
 	showTarget();
-	Serial.println("Hard stop detected.");
+	Serial.println(F("Hard stop detected."));
 	
 	lcd.clear();
 	lcd.setCursor(0, 0);
-	lcd.print("KJORER PROGRAM : ");
+	lcd.print(F("KJORER PROGRAM : "));
 	lcd.setCursor(0, 1);
-	lcd.print("STOPPET!");
+	lcd.print(F("STOPPET!"));
 
 	
 
 }
 
-void switchProgram() {
-	Serial.println("Switching.");
+void switchProgram(bool run) {
+	
+	Serial.println(F("Switching."));
 
-	if (currentProgram < numberOfPrograms) {
-		currentProgram++;
+	if(!run) {
+		if (currentProgram < numberOfPrograms) {
+			currentProgram++;
+		}
+
+		else if (currentProgram = numberOfPrograms) {
+			currentProgram = 0;
+		}
 	}
 
-	else if (currentProgram = numberOfPrograms) {
-		currentProgram = 0;
-	}
-
-	Serial.print("Current program is : ");
+	Serial.print(F("Current program is : "));
 	Serial.println(currentProgram);
 
 	// Update LCD.
 	lcd.clear();
 	lcd.setCursor(0, 0);
-	lcd.print("VELG PROGRAM : ");
+	lcd.print(F("VELG PROGRAM : "));
 	lcd.setCursor(0, 1);
+
 	switch (currentProgram) {
 	case 0:    // STANDARD
-		lcd.print("STANDARD");
+		lcd.print(F("STANDARD"));
+		if(run) { runProgram(0, 150000, 1); }
 		break;
 	case 1:    // VM FIN / GROV
-		lcd.print("VM FIN / GROV");
-
+		lcd.print(F("VM FIN / GROV"));
+		if (run) { runProgram(7000, 300000, 1); }
 		break;
 	case 2:    // VMFIN / GROV DUELL
-		lcd.print("VM FIN / GROV DUELL");
+		lcd.print(F("VM FIN / GROV DUELL"));
+		if (run) { runProgram(7000, 3000, 5); }
 		break;
 	case 3:    // 7-20
-		lcd.print("7-20");
+		lcd.print(F("7-20"));
+		if (run) { runProgram(7000, 20000, 1); }
 		break;
 	case 4:    // 7-10
-		lcd.print("7-10");
+		lcd.print(F("7-10"));
+		if (run) { runProgram(7000, 10000, 1); }
 		break;
 	case 5:    // 7-8
-		lcd.print("7-8");
+		lcd.print(F("7-8"));
+		if (run) { runProgram(7000, 8000, 1); }
 		break;
 	case 6:    // 7-6
-		lcd.print("7-6");
+		lcd.print(F("7-6"));
+		if (run) { runProgram(7000, 6000, 1); }
 		break;
 	case 7:    // 7-4		
-		lcd.print("7-4");
+		lcd.print(F("7-4"));
+		if (run) { runProgram(7000, 4000, 3); }
 		break;
 	case 8:    // CUSTOM
-		lcd.print("CUSTOM");
+		lcd.print(F("CUSTOM"));
+		if (run) { runProgram(7000, 10000, 1); }
 
 		break;
 	}
@@ -261,13 +245,13 @@ void finalizeRun() {
 
 void hideTarget() {
 	digitalWrite(RELAY, 1);
-	Serial.println("Hiding target..");
+	Serial.println(F("Hiding target.."));
 
 }
 
 void showTarget() {
 	digitalWrite(RELAY, 0);
-	Serial.println("Showing target..");
+	Serial.println(F("Showing target.."));
 
 }
 
