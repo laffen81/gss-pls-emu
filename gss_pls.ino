@@ -7,9 +7,7 @@ LiquidCrystal lcd(19, 18, 15, 17, 14, 16);
 
 
 
-// # Timers
-Timer *hiddenTimer;
-Timer *visibleTimer;
+
 
 // # IO
 
@@ -53,6 +51,7 @@ void setup()
 
 	pinMode(RELAY, OUTPUT);
 
+
 }  
 
 
@@ -82,10 +81,16 @@ void loop()
 
 void runProgram(int hidden, int visible, int repeat) {
 
+	// # Timers
+	Timer *hiddenTimer;
+	Timer *visibleTimer;
+
 	if (startProgram) {
+		
 		startProgram = false;
 
 		while (!finished) {
+
 
 			if (notifyUser) {
 				
@@ -130,7 +135,8 @@ void runProgram(int hidden, int visible, int repeat) {
 
 			if (runTimes >= repeat) {
 				Serial.println(F("Program finished"));
-
+				visibleTimer->Stop();
+				hiddenTimer->Stop();
 				stopProgram();
 			}
 
@@ -143,14 +149,7 @@ void runProgram(int hidden, int visible, int repeat) {
 }
 
 void stopProgram() {
-	
-	visibleTimer->Stop();
-	hiddenTimer->Stop();
 
-	// Free alloc mem.
-	delete(&visibleTimer);
-	delete(&hiddenTimer);
-	
 	hasStopped = true;
 	initial = true;
 	finished = true;
