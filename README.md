@@ -17,3 +17,7 @@ The solution consists of a Arduino UNO, a LCD panel, a relay and three buttons c
 2. Hard stop (while running a program).
 3. Supports multiple runs of the same program.
 4. Built in counter for repeating programs.
+5. 
+
+## Libs
+The program utilizes [this](http://playground.arduino.cc/Code/ArduinoTimerObject) library as a Timer.
