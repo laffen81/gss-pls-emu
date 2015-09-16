@@ -194,40 +194,40 @@ void switchProgram(bool run) {
 
 	switch (currentProgram) {
 	case 0:    // STANDARD
-		lcd.print(F("STANDARD"));
+		lcd.print(F("150 SEK"));
 		if(run) { runProgram(0, 150000, 1); }
 		break;
 	case 1:    // VM FIN / GROV
-		lcd.print(F("VM FIN / GROV"));
+		lcd.print(F("300 SEK"));
 		if (run) { runProgram(7000, 300000, 1); }
 		break;
 	case 2:    // VMFIN / GROV DUELL
-		lcd.print(F("VM FIN / GROV DUELL"));
+		lcd.print(F("DUELL"));
 		if (run) { runProgram(7000, 3000, 5); }
 		break;
 	case 3:    // 7-20
-		lcd.print(F("7-20"));
+		lcd.print(F("7-20 SEK"));
 		if (run) { runProgram(7000, 20000, 1); }
 		break;
 	case 4:    // 7-10
-		lcd.print(F("7-10"));
+		lcd.print(F("7-10 SEK"));
 		if (run) { runProgram(7000, 10000, 1); }
 		break;
 	case 5:    // 7-8
-		lcd.print(F("7-8"));
+		lcd.print(F("7-8 SEK"));
 		if (run) { runProgram(7000, 8000, 1); }
 		break;
 	case 6:    // 7-6
-		lcd.print(F("7-6"));
+		lcd.print(F("7-6 SEK"));
 		if (run) { runProgram(7000, 6000, 1); }
 		break;
 	case 7:    // 7-4		
-		lcd.print(F("7-4"));
-		if (run) { runProgram(7000, 4000, 3); }
+		lcd.print(F("7-4 SEK"));
+		if (run) { runProgram(7000, 4000, 1); }
 		break;
 	case 8:    // CUSTOM
-		lcd.print(F("CUSTOM"));
-		if (run) { runProgram(7000, 10000, 1); }
+		lcd.print(F("FELT 12SEK"));
+		if (run) { runProgram(10000, 12000, 1); }
 
 		break;
 	}
