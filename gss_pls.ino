@@ -3,7 +3,7 @@
 #include <LiquidCrystal.h>
 
 
-LiquidCrystal lcd(19, 18, 15, 17, 14, 16);
+LiquidCrystal lcd(19, 18, 17, 16, 15, 14);
 
 
 
