@@ -46,7 +46,7 @@ void setup()
 	// Print a message to the LCD.
 	lcd.print(F("VELG PROGRAM : "));
 	lcd.setCursor(0, 1);
-	lcd.print(F("STANDARD"));
+	lcd.print(F("150 SEK"));
 
 	pinMode(RELAY, OUTPUT);
 
@@ -207,16 +207,16 @@ void switchProgram(bool run) {
 	lcd.setCursor(0, 1);
 
 	switch (currentProgram) {
-	case 0:    // STANDARD
+	case 0:    // 150 SEK
 		lcd.print(F("150 SEK"));
 		if (run) { runProgram(0, 150000, 1); }
 		break;
-	case 1:    // VM FIN / GROV
+	case 1:    // 300 SEK
 		lcd.print(F("300 SEK"));
 		if (run) { runProgram(7000, 300000, 1); }
 		break;
-	case 2:    // VMFIN / GROV DUELL
-		lcd.print(F("DUELL"));
+	case 2:    // DUELL
+		lcd.print(F("DUELL 7+3 SEK"));
 		if (run) { runProgram(7000, 3000, 5); }
 		break;
 	case 3:    // 7-20
@@ -239,8 +239,8 @@ void switchProgram(bool run) {
 		lcd.print(F("7-4 SEK"));
 		if (run) { runProgram(7000, 4000, 1); }
 		break;
-	case 8:    // CUSTOM
-		lcd.print(F("FELT 12SEK"));
+	case 8:    // FELT
+		lcd.print(F("FELT 12 SEK"));
 		if (run) { runProgram(10000, 12000, 1); }
 
 		break;
